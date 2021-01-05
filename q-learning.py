@@ -1,6 +1,5 @@
 #-------------------------------------------------------------------------------
-# A Python implementation of Q-Learning for path finding problem, which tries
-# to follow reinforcement learning model as close as possible.
+# A Python implementation of Q-Learning for path finding problem [2].
 #
 # Author: Tung D. Le
 #
