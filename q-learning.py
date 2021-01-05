@@ -28,13 +28,14 @@ def argmax(x):
 # Environment = (S, A, t, o, r)
 # S: a finite set of states
 # A: a finite set of actions
-# t: state transition func (state -> action -> state)
+# t: state transition function (state -> action -> state)
 # o: observation function (state -> action -> state)
 # r: reward function (state -> action -> reward)
 class Environment:
     def __init__(self, S, A):
         self.S = S
         self.A = A
+        # Represent the reward function by a state-action matrix.
         self.R = None
 
     # prev_state -> action -> state
@@ -70,8 +71,8 @@ class Environment:
 # Agent = (S, A, t, p)
 # S: a finite set of states
 # A: a finite set of actions
-# t: state transition function
-# p: policy function
+# t: state transition function (state -> action -> observation -> reward -> new_state)
+# p: policy function (state -> action)
 class Agent:
     def __init__(self, S, A):
         self.S = S
@@ -83,7 +84,7 @@ class Agent:
         return observation
 
     # state -> action
-    # Policy is greedy w.r.t. Q(s, a).
+    # The optimial policy can be found by maximising over Q*(s, a).
     def policy(self, state, Q):
         return argmax(Q[state,])
 
@@ -93,6 +94,7 @@ class Agent:
 
 state_space = np.arange(0, 6)
 action_space = np.arange(0, 6)
+terminal_state = 5
 
 # Input graph: Node 5 is an absorbing state.
 #
@@ -115,6 +117,8 @@ action_space = np.arange(0, 6)
 # Environment
 env = Environment(state_space, action_space)
 # Immediate rewards
+# - -1: invalid action.
+# - Get 100 if reaching the terminal state. Otherwise, 0.
 R = np.matrix([[-1, -1, -1, -1, 0, -1],
                [-1, -1, -1, 0, -1, 100],
                [-1, -1, -1, 0, -1, -1],
@@ -122,7 +126,6 @@ R = np.matrix([[-1, -1, -1, -1, 0, -1],
                [0, -1, -1, 0, -1, 100],
                [-1, 0, -1, -1, 0, 100]])
 env.set_reward_matrix(R)
-terminal_state = 5
 
 
 # Agent
